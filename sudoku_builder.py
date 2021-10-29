@@ -119,6 +119,31 @@ def build_graph(sudoku_matrix):
     return complete_graph
 
 
-# print_sudoku(sudoku_template)
-graph = build_graph(sudoku_template)
-print_graph(graph)
+option = 0
+while option != 3:
+    print('Options:')
+    print('1. Print sudoku board')
+    print('2. Print board graph (adjacency list)')
+    print('3. Exit')
+    print('-------')
+    option = input("Type option and press ENTER:")
+
+    if option == "1":
+        print('')
+        print('')
+        print('SUDOKU BOARD:')
+        print_sudoku(sudoku_template)
+        print('')
+        print('')
+
+    if option == "2":
+        print('')
+        print('')
+        print('GRAPH RESULTED (adjacency list):')
+        graph = build_graph(sudoku_template)
+        print_graph(graph)
+        print('')
+        print('')
+
+    if option == "3":
+        break

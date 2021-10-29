@@ -25,7 +25,7 @@ def list_relashionships(relashionships):
 
 def print_graph(graph):
     print("Format:")
-    print("(value: <vertex-value> [<vertex-value-coordinate_x>, <vertex-value-coordinate_y>]) : list of vertexes with relashionship")
+    print("(value: <vertex-value> [<vertex-value-coordinate_x>, <vertex-value-coordinate_y>]) : list of vertexes' values that have a relashionship")
     print("------------------------------------------------------------------------------------------------------------------------")
 
     for graph_key in graph.keys():
