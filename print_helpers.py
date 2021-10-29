@@ -24,5 +24,9 @@ def list_relashionships(relashionships):
     return relashionship_ids
 
 def print_graph(graph):
+    print("Format:")
+    print("(value: <vertex-value> [<vertex-value-coordinate_x>, <vertex-value-coordinate_y>]) : list of vertexes with relashionship")
+    print("------------------------------------------------------------------------------------------------------------------------")
+
     for graph_key in graph.keys():
         print(f"(value: {graph_key.value} [{graph_key.coordinate_x}, {graph_key.coordinate_y}]) : {list_relashionships(graph[graph_key])}")

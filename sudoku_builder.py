@@ -14,7 +14,7 @@ import json
 # ]
 
 sudoku_template = [
-  [1, 2, 3, 4, None, None, None, None, None],
+  [1, 12, 13, 14, None, None, None, None, None],
   [2, None, None, None, None, None, None, None, None],
   [3, None, None, None, None, None, None, None, None],
   [4, None, None, None, None, None, None, None, None],
@@ -51,9 +51,9 @@ def find_vertex(graph, coordinate_x, coordinate_y):
 def build_relationships(graph, sudoku_matrix):
     for graph_key in graph.keys():
         graph = build_row_relationships(graph_key, graph, sudoku_matrix)
-        build_column_relationships(graph_key, graph, sudoku_matrix)
-        # graph = build_colum_relationships(graph_key, graph, sudoku_matrix)
-        # graph = build_subset_relationships(graph_key, graph, sudoku_matrix)
+        graph = build_column_relationships(graph_key, graph, sudoku_matrix)
+
+    build_subset_relationships(graph_key, graph, sudoku_matrix)
 
     pass
 
@@ -83,6 +83,23 @@ def build_column_relationships(graph_key, graph, sudoku_matrix):
 
     return graph
 
+def build_subset_relationships(graph_key, graph, sudoku_matrix):
+    coordinate_x = graph_key.coordinate_x
+    coordinate_y = graph_key.coordinate_y
+
+    subsets = []
+
+    for index in [1, 3, 6]:
+        subsets.append([
+            [index,     index], [index,     index + 1], [index,     index + 2],
+            [index + 1, index], [index + 1, index + 1], [index + 1, index + 2],
+            [index + 2, index], [index + 2, index + 1], [index + 2, index + 2]
+        ])
+
+    print(subsets[1])
+
+
+
 def build_graph(sudoku_matrix):
     graph = build_graph_keys(sudoku_matrix)
     complete_graph = build_relationships(graph, sudoku_matrix)
@@ -91,4 +108,4 @@ def build_graph(sudoku_matrix):
 
 # print_sudoku(sudoku_template)
 graph = build_graph(sudoku_template)
-print_graph(graph)
+# print_graph(graph)
