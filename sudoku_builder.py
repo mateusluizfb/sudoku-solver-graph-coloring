@@ -1,3 +1,4 @@
+from print_helpers import print_sudoku, print_graph
 import json
 
 sudoku_template = [
@@ -20,40 +21,44 @@ class GraphVertex(object):
 
 # http://www.cs.kent.edu/~dragan/ST-Spring2016/SudokuGC.pdf
 
-def print_sudoku(sudoku_matrix):
-    print('---------------------------------------------------------------------------------')
-    print(f'{sudoku_matrix[0][0]} {sudoku_matrix[0][1]} {sudoku_matrix[0][2]}   |   {sudoku_matrix[0][3]} {sudoku_matrix[0][4]} {sudoku_matrix[0][5]}   |   {sudoku_matrix[0][6]} {sudoku_matrix[0][7]} {sudoku_matrix[0][8]}')
-    print(f'{sudoku_matrix[1][0]} {sudoku_matrix[1][1]} {sudoku_matrix[1][2]}   |   {sudoku_matrix[1][3]} {sudoku_matrix[1][4]} {sudoku_matrix[1][5]}   |   {sudoku_matrix[1][6]} {sudoku_matrix[1][7]} {sudoku_matrix[1][8]}')
-    print(f'{sudoku_matrix[2][0]} {sudoku_matrix[2][1]} {sudoku_matrix[2][2]}   |   {sudoku_matrix[2][3]} {sudoku_matrix[2][4]} {sudoku_matrix[2][5]}   |   {sudoku_matrix[2][6]} {sudoku_matrix[2][7]} {sudoku_matrix[2][8]}')
-    print('---------------------------------------------------------------------------------')
-    print(f'{sudoku_matrix[3][0]} {sudoku_matrix[3][1]} {sudoku_matrix[3][2]}   |   {sudoku_matrix[3][3]} {sudoku_matrix[3][4]} {sudoku_matrix[3][5]}   |   {sudoku_matrix[3][6]} {sudoku_matrix[3][7]} {sudoku_matrix[3][8]}')
-    print(f'{sudoku_matrix[4][0]} {sudoku_matrix[4][1]} {sudoku_matrix[4][2]}   |   {sudoku_matrix[4][3]} {sudoku_matrix[4][4]} {sudoku_matrix[4][5]}   |   {sudoku_matrix[4][6]} {sudoku_matrix[4][7]} {sudoku_matrix[4][8]}')
-    print(f'{sudoku_matrix[5][0]} {sudoku_matrix[5][1]} {sudoku_matrix[5][2]}   |   {sudoku_matrix[5][3]} {sudoku_matrix[5][4]} {sudoku_matrix[5][5]}   |   {sudoku_matrix[5][6]} {sudoku_matrix[5][7]} {sudoku_matrix[5][8]}')
-    print('---------------------------------------------------------------------------------')
-    print(f'{sudoku_matrix[6][0]} {sudoku_matrix[6][1]} {sudoku_matrix[6][2]}   |   {sudoku_matrix[6][3]} {sudoku_matrix[6][4]} {sudoku_matrix[6][5]}   |   {sudoku_matrix[6][6]} {sudoku_matrix[6][7]} {sudoku_matrix[6][8]}')
-    print(f'{sudoku_matrix[7][0]} {sudoku_matrix[7][1]} {sudoku_matrix[7][2]}   |   {sudoku_matrix[7][3]} {sudoku_matrix[7][4]} {sudoku_matrix[7][5]}   |   {sudoku_matrix[7][6]} {sudoku_matrix[7][7]} {sudoku_matrix[7][8]}')
-    print(f'{sudoku_matrix[8][0]} {sudoku_matrix[8][1]} {sudoku_matrix[8][2]}   |   {sudoku_matrix[8][3]} {sudoku_matrix[8][4]} {sudoku_matrix[8][5]}   |   {sudoku_matrix[8][6]} {sudoku_matrix[8][7]} {sudoku_matrix[8][8]}')
-    print('---------------------------------------------------------------------------------')
-
-
 def build_graph_keys(sudoku_matrix):
     graph = {}
 
-    for i in range(8):
-        for j in range(8):
+    for i in range(9):
+        for j in range(9):
             graph_vertex = GraphVertex(i, j, sudoku_matrix[i][j])
             graph[graph_vertex] = []
 
     return graph
 
+def find_vertex(graph, coordinate_x, coordinate_y):
+    for vertex in graph.keys():
+        if vertex.coordinate_x == coordinate_x and vertex.coordinate_y == coordinate_y:
+            return vertex
+
 def build_relationships(graph, sudoku_matrix):
+    for graph_key in graph.keys():
+        graph = build_row_relationships(graph_key, graph, sudoku_matrix)
+        # graph = build_colum_relationships(graph_key, graph, sudoku_matrix)
+        # graph = build_subset_relationships(graph_key, graph, sudoku_matrix)
 
     pass
+
+def build_row_relationships(graph_key, graph, sudoku_matrix):
+    coordinate_x = graph_key.coordinate_x
+
+    for coordinate_y, row_value in enumerate(sudoku_matrix[coordinate_x]):
+        vertex = find_vertex(graph, coordinate_x, coordinate_y)
+        graph[graph_key] = graph[graph_key] + [vertex]
+
+    return graph
 
 def build_graph(sudoku_matrix):
     graph = build_graph_keys(sudoku_matrix)
     complete_graph = build_relationships(graph, sudoku_matrix)
-
-
-
     return graph
+
+
+# print_sudoku(sudoku_template)
+graph = build_graph(sudoku_template)
+print_graph(graph)
