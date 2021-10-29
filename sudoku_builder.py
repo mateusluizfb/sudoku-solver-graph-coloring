@@ -1,6 +1,8 @@
 from print_helpers import print_sudoku, print_graph
 import json
 
+# http://www.cs.kent.edu/~dragan/ST-Spring2016/SudokuGC.pdf
+
 # sudoku_template = [
 #   [5, 3, None, None, 7, None, None, None, None],
 #   [6, None, None, 1, 9, 5, None, None, None],
@@ -14,9 +16,9 @@ import json
 # ]
 
 sudoku_template = [
-  [1, 12, 13, 14, None, None, None, None, None],
-  [2, None, None, None, None, None, None, None, None],
-  [3, None, None, None, None, None, None, None, None],
+  [1, 12,  13,  14, 15, 16, 17, 18, 19],
+  [2, 100, 102, None, None, None, None, None, None],
+  [3, 103, 104, None, None, None, None, None, None],
   [4, None, None, None, None, None, None, None, None],
   [5, None, None, None, None, None, None, None, None],
   [6, None, None, None, None, None, None, None, None],
@@ -30,8 +32,6 @@ class GraphVertex(object):
         self.coordinate_x = coordinate_x
         self.coordinate_y = coordinate_y
         self.value = value
-
-# http://www.cs.kent.edu/~dragan/ST-Spring2016/SudokuGC.pdf
 
 def build_graph_keys(sudoku_matrix):
     graph = {}
@@ -53,9 +53,9 @@ def build_relationships(graph, sudoku_matrix):
         graph = build_row_relationships(graph_key, graph, sudoku_matrix)
         graph = build_column_relationships(graph_key, graph, sudoku_matrix)
 
-    build_subset_relationships(graph_key, graph, sudoku_matrix)
+    graph = build_subset_relationships(graph, sudoku_matrix)
 
-    pass
+    return graph
 
 def build_row_relationships(graph_key, graph, sudoku_matrix):
     coordinate_x = graph_key.coordinate_x
@@ -83,29 +83,42 @@ def build_column_relationships(graph_key, graph, sudoku_matrix):
 
     return graph
 
-def build_subset_relationships(graph_key, graph, sudoku_matrix):
-    coordinate_x = graph_key.coordinate_x
-    coordinate_y = graph_key.coordinate_y
-
+def build_subset_relationships(graph, sudoku_matrix):
     subsets = []
 
-    for index in [1, 3, 6]:
+    for index in [0, 3, 6]:
         subsets.append([
             [index,     index], [index,     index + 1], [index,     index + 2],
             [index + 1, index], [index + 1, index + 1], [index + 1, index + 2],
             [index + 2, index], [index + 2, index + 1], [index + 2, index + 2]
         ])
 
-    print(subsets[1])
+    # iterate over subsets
+    for index in [0, 1, 2]:
+        coordinates = subsets[index]
 
+        # iterate over a given subset cooridates
+        for coordinate in coordinates:
+            vertex = find_vertex(graph, coordinate[0], coordinate[1])
 
+            # for each coordinate, check it's neighbors and create a relation
+            for coordinates_to_relate in coordinates:
+                # print(coordinates_to_relate)
+                vertex_to_relate = find_vertex(graph, coordinates_to_relate[0], coordinates_to_relate[1])
+
+                if vertex == vertex_to_relate:
+                    continue
+
+                graph[vertex] = list(dict.fromkeys(graph[vertex] + [vertex_to_relate]))
+
+    return graph
 
 def build_graph(sudoku_matrix):
     graph = build_graph_keys(sudoku_matrix)
     complete_graph = build_relationships(graph, sudoku_matrix)
-    return graph
+    return complete_graph
 
 
 # print_sudoku(sudoku_template)
 graph = build_graph(sudoku_template)
-# print_graph(graph)
+print_graph(graph)
