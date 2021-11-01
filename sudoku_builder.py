@@ -1,31 +1,6 @@
 from print_helpers import print_sudoku, print_graph
+from sudoku_board_generator import create_sudoku_game, game_with_blank_spaces
 import json
-
-# http://www.cs.kent.edu/~dragan/ST-Spring2016/SudokuGC.pdf
-
-# sudoku_template = [
-#   [5, 3, None, None, 7, None, None, None, None],
-#   [6, None, None, 1, 9, 5, None, None, None],
-#   [None, 9, 8, None, None, None, None, 6, None],
-#   [8, None, None, None, 6, None, None, None, 3],
-#   [4, None, None, 8, None, 3, None, None, 1],
-#   [7, None, None, None, 2, None, None, None, 6],
-#   [None, 6, None, None, None, None, 2, 8, None],
-#   [None, None, None, 4, 1, 9, None, None, 5],
-#   [None, None, None, None, 8, None, None, 7, 9]
-# ]
-
-sudoku_template = [
-  [1, 12,  13,  14, 15, 16, 17, 18, 19],
-  [2, 100, 102, None, None, None, None, None, None],
-  [3, 103, 104, None, None, None, None, None, None],
-  [4, None, None, None, None, None, None, None, None],
-  [5, None, None, None, None, None, None, None, None],
-  [6, None, None, None, None, None, None, None, None],
-  [7, None, None, None, None, None, None, None, None],
-  [8, None, None, None, None, None, None, None, None],
-  [9, None, None, None, None, None, None, None, None]
-]
 
 class GraphVertex(object):
     def __init__(self, coordinate_x, coordinate_y, value):
@@ -119,11 +94,13 @@ def build_graph(sudoku_matrix):
     return complete_graph
 
 
+current_sudoku_game = None
 option = 0
 while option != 3:
     print('Options:')
-    print('1. Print sudoku board')
+    print('1. Create a sudoku game')
     print('2. Print board graph (adjacency list)')
+    print("  Format: ([<vertex-value-coordinate_x>, <vertex-value-coordinate_y>]) : list of vertexes' coordinates that have a relashionship")
     print('3. Exit')
     print('-------')
     option = input("Type option and press ENTER:")
@@ -131,16 +108,30 @@ while option != 3:
     if option == "1":
         print('')
         print('')
-        print('SUDOKU BOARD:')
-        print_sudoku(sudoku_template)
+        print('COMPLETE SUDOKU BOARD:')
+        sudoku_game = create_sudoku_game()
+        print_sudoku(sudoku_game)
+        print('')
+        print('')
+        print('SUDOKU BOARD CHALLENGE:')
+        current_sudoku_game = game_with_blank_spaces(sudoku_game)
+        print_sudoku(current_sudoku_game)
         print('')
         print('')
 
     if option == "2":
+        if current_sudoku_game == None:
+            print('')
+            print('')
+            print('-> Please create a sudoku game first <-')
+            print('')
+            print('')
+            continue
+
         print('')
         print('')
         print('GRAPH RESULTED (adjacency list):')
-        graph = build_graph(sudoku_template)
+        graph = build_graph(current_sudoku_game)
         print_graph(graph)
         print('')
         print('')

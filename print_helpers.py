@@ -19,14 +19,14 @@ def list_relashionships(relashionships):
 
     relashionship_ids = []
     for relashionship in relashionships:
-        relashionship_ids.append(relashionship.value)
+        relashionship_ids.append([relashionship.coordinate_x, relashionship.coordinate_y])
 
     return relashionship_ids
 
 def print_graph(graph):
     print("Format:")
-    print("(value: <vertex-value> [<vertex-value-coordinate_x>, <vertex-value-coordinate_y>]) : list of vertexes' values that have a relashionship")
+    print("([<vertex-value-coordinate_x>, <vertex-value-coordinate_y>]) : list of vertexes' coordinates that have a relashionship")
     print("------------------------------------------------------------------------------------------------------------------------")
 
     for graph_key in graph.keys():
-        print(f"(value: {graph_key.value} [{graph_key.coordinate_x}, {graph_key.coordinate_y}]) : {list_relashionships(graph[graph_key])}")
+        print(f"vertex ([{graph_key.coordinate_x}, {graph_key.coordinate_y}]) : {list_relashionships(graph[graph_key])}")
